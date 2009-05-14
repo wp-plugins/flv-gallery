@@ -13,6 +13,7 @@ Add a gallery of FLV videos to a post.
 
 FLV Gallery allows you to add multiple videos to a single page, thumbnail gallery style. Most video plugins assume you only want to show one video on your post, so if you have multiple videos to show, they are stacked one above the other. This plugin uses shortcode notation to allow you to insert as many videos as you want into your post. Using thumbnails, a title and caption, and any additional link, the user will see a nicely formatted gallery of the available videos. Videos are shown in a lightbox dialog.
 
+Online demo: [English: FLV Gallery on insidenorthpoint.org](http://insidenorthpoint.org/groups/assimilation/branding-promotion/ "FLV Gallery on Inside North Point")
 
 == Installation ==
 
@@ -21,3 +22,7 @@ FLV Gallery allows you to add multiple videos to a single page, thumbnail galler
 
 The control panel of FLV Gallery is in 'Settings > FLV Gallery' 
 
+== Screenshots ==
+
+1. screenshot-1.png
+2. screenshot-2.png
