@@ -3,6 +3,7 @@ Contributors: russell.todd
 Tags: flv, video, gallery
 Requires at least: 2.7
 Tested up to: 2.7
+Stable tag: trunk
 
 Add a gallery of FLV videos to a post.
 
