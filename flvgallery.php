@@ -3,7 +3,7 @@
 Plugin Name: FLV Gallery
 Plugin URI: http://northpoint.org
 Description: This plugin allows you to add multiple FLV videos to a single page, using thumbnails and a single modal player. 
-Version: 1.0
+Version: 1.1	
 Author: Russell Todd
 Author URI: http://northpoint.org
 */
@@ -38,6 +38,7 @@ function flvgallery_shortcode($atts) {
 	
 	extract(shortcode_atts(array(
 		'video' => null,
+		'path' => null,
 		'title' => null,
 		'caption' => null,
 		'thumbnail' => null,
@@ -55,11 +56,12 @@ function flvgallery_shortcode($atts) {
 	$flvItemCount++;
 	
 	// if we have a valid video then add the action for the javascript
-	if ($flvItemCount == 1) { 
-		add_action('loop_end','flvgallery_jquery'); ?>
+	if ($flvItemCount == 1) {  ?>
 	<script type="text/javascript">	
 	var flvconfig = new Array();
-	function VideoConfig(w,h) {
+	function VideoConfig(f,p,w,h) {
+		this.flv = f;
+		this.path = p;
 		this.width = w;
 		this.height = h;
 	}
@@ -81,16 +83,19 @@ function flvgallery_shortcode($atts) {
     	$h .= '</span>';
     }	
 	$h .= '</div>';
-	$h .= '<script type="text/javascript">flvconfig["' . $video . '"] = new VideoConfig(' . $width . ',' . $height . ');</script>';
+	$h .= '<script type="text/javascript">flvconfig["' . $video . '"] = new VideoConfig("' . $video . '","' . $path . '",' . $width . ',' . $height . ');</script>';
 	/* if ($flvItemCount % 3 == 0) $h .= '<div style="clear:both; line-height: 1px;" >&nbsp;</div>'; */
 	return $h . "\n";
 }
-function flvgallery_jquery($id) {	
+function flvgallery_jquery() {
+	global $flvItemCount;
+	if ($flvItemCount > 0) {	
 	?>
 	<div style="clear:both; line-height: 1px;" >&nbsp;</div>
 	<div id="flvgallery-player" style="width:426px;height:240px;display:none;"><span id="flv-gallery-player">&nbsp;</span></div>
- 	<script type="text/javascript" src="<?php echo WP_PLUGIN_URL; ?>/flv-gallery/swfobject.js"></script>
- 	<script type="text/javascript" src="<?php echo WP_PLUGIN_URL; ?>/flv-gallery/jquery.simplemodal.js"></script>
+ 	<?php wp_enqueue_script('swfobject'); ?>
+ 	<?php wp_enqueue_script('simplemodal'); ?>
+ 	<?php wp_print_scripts(); ?>
 	<script type="text/javascript">
 	var maxRowH = 0;
 	jQuery(document).ready(function() {
@@ -99,6 +104,7 @@ function flvgallery_jquery($id) {
 			var flv = jQuery(this).attr('href');
 			var width = flvconfig[flv].width;
 			var height = flvconfig[flv].height;
+			var path = flvconfig[flv].path;
 			//var dw = width + 20;
 			//var dh = height + 20;
 			var m = -1 * (width / 2);
@@ -119,7 +125,14 @@ function flvgallery_jquery($id) {
 				    <?= get_option('flvgallery_modal_css') ?>
 				  } 
 			});
-			swfobject.embedSWF("<?php echo WP_PLUGIN_URL; ?>/flv-gallery/player.swf", "flv-gallery-player", width, height, "9", null, { wmode: "opaque", allowfullscreen: "false", "autostart": true, "file": flv, "bufferlength": "15", "volume": "100", "backcolor": "FFFFFF", "frontcolor": "000000", "lightcolor": "000000", "screencolor": "000000" }, { wmode: "opaque", allowfullscreen: "true" }, {});
+			var flvParams = { "allowfullscreen": "false", "autostart": true, "width": width, "height": height, "displayheight": height };
+			if (path) {
+				flvParams["file"] = path;
+				flvParams["id"] = flv;
+			} else {
+				flvParams["file"] = flv;
+			}
+			swfobject.embedSWF("<?php echo WP_PLUGIN_URL; ?>/flv-gallery/player.swf", "flv-gallery-player", width, height, "9", null, flvParams, { allowfullscreen: "true" }, { id: "myVideo", align: "center" });
 
 		});
 		jQuery(".flvgallery-item").each( function() {
@@ -145,6 +158,7 @@ function flvgallery_jquery($id) {
 	}
 	</script>
 <?php
+	}
     return $id;
 }
 
@@ -174,7 +188,7 @@ function flvgallery_head() {
 <!-- FLV Gallery Styles -->
 <style type="text/css">
 #modalContainer a.modalCloseImg {
-  background:url(/wp-includes/images/x.png) no-repeat;
+  background:url(<?php echo WP_PLUGIN_URL; ?>/flv-gallery/x.png) no-repeat;
   width:25px;
   height:29px;
   display:inline;
@@ -273,7 +287,7 @@ function flvgallery_admin_page() {
 			</tr>
 	
 			<tr valign="top">
-				<th scope="row">Modal Player Style (background color and border only)</th>
+				<th scope="row">Modal Player Style (background color and border only, comma-separated)</th>
 				<td><input type="text" name="flvgallery_modal_css" value="<?php echo $css ?>" size="60" /></td>
 			</tr>
 		
@@ -318,6 +332,18 @@ function RegisterSettingsPage() {
 
 add_shortcode('flvgallery', 'flvgallery_shortcode');
 add_action('wp_head','flvgallery_head');
+add_action('loop_end','flvgallery_jquery');
 register_activation_hook( __FILE__, 'flvgallery_plugin_activate' );
+
+wp_register_script(
+	'swfobject',
+	path_join( WP_PLUGIN_URL, basename( dirname( __FILE__ ) ) . '/swfobject.js' )
+);
+
+wp_register_script(
+	'simplemodal',
+	path_join( WP_PLUGIN_URL, basename( dirname( __FILE__ ) ) . '/jquery.simplemodal.js' ),
+	array( 'jquery' )
+);
 
 ?>
