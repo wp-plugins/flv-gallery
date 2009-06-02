@@ -105,8 +105,8 @@ function flvgallery_jquery() {
 			var width = flvconfig[flv].width;
 			var height = flvconfig[flv].height;
 			var path = flvconfig[flv].path;
-			//var dw = width + 20;
-			//var dh = height + 20;
+			var dw = width + 20;
+			var dh = height + 20;
 			var m = -1 * (width / 2);
 			jQuery("#flvgallery-player").modal( 
 				{ close: true, 
@@ -116,8 +116,8 @@ function flvgallery_jquery() {
 				    cursor: 'wait'
 				  },
 				  containerCss: {
-				    height: height,
-				    width: width,
+				    height: dh,
+				    width: dw,
 				    padding: 10,
 				    left: '50%',
 				    top: '15%',
