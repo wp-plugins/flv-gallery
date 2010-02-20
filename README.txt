@@ -42,6 +42,8 @@ The control panel of FLV Gallery is in 'Settings > FLV Gallery', where you can s
 
 To add videos to your post/page, insert a line like the following for each video:
 
+NOTE: Use the HTML tab, not VISUAL from the WordPress Post editor.
+
 [flvgallery video="/path/to/videos/video1.flv" title="Title for Video 1" caption="Optional Caption" thumbnail="/path/to/thumbnails/thumbnail1.jpg" url="<optional click to>" url_text="<optional link text"> url_icon="<optional link icon>" width="400" height="225"]
 
 - required parameters:
