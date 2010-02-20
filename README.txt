@@ -2,7 +2,7 @@
 Contributors: russell.todd
 Tags: flv, video, gallery
 Requires at least: 2.7
-Tested up to: 2.7
+Tested up to: 2.9.1
 Stable tag: trunk
 
 Add a gallery of FLV videos to a post.
@@ -15,7 +15,14 @@ FLV Gallery allows you to add multiple FLV videos to a single page, thumbnail ga
 
 Online demo: [English: FLV Gallery on insidenorthpoint.org](http://insidenorthpoint.org/groups/assimilation/branding-promotion/ "FLV Gallery on Inside North Point")
 
-Dependencies: The FLV Gallery uses jQuery and the [Simple Modal plugin](http://www.ericmmartin.com/projects/simplemodal/ "Simple Modal plugin") by Eric Martin 
+Dependencies: The FLV Gallery uses the following:
+	- jQuery and the [Simple Modal plugin](http://www.ericmmartin.com/projects/simplemodal/ "Simple Modal plugin") by Eric Martin 
+	- [JW FLV Player] (http://www.longtailvideo.com/players/jw-flv-player/ "JW FLV Player") by Longtail Video
+
+New in this version:
+	- better CSS control of the modal dialog window, resolving some known issues
+	- ability to show videos hosted on a streaming server
+	- updated FLV player
 
 == Installation ==
 
@@ -28,7 +35,9 @@ The control panel of FLV Gallery is in 'Settings > FLV Gallery', where you can s
 
 2. Thumbnail size (default = 125 x 125): The dimensions that you will make the thumbnails. The gallery will layout best if you upload thumbnails of the same size.
 
-3. Modal Player Style (default = "backgroundColor: '#fff', border: '3px solid #75001b'"): This is the CSS style you can use for the modal dialog window that the video will play in. The main styles to set are the background color and border, but you can also set the padding. The overall size of the dialog is based on the video size.
+3. Modal Player Background Color (default = "#fff): This is the CSS background color for the modal dialog window that the video will play in. 
+
+4. Modal Player Border Style (default = "3px solid #75001b"): This is the CSS style for the border of the modal dialog window. The overall size of the dialog is based on the video size.
 
 
 To add videos to your post/page, insert a line like the following for each video:
@@ -45,13 +54,17 @@ To add videos to your post/page, insert a line like the following for each video
 - optional parameters:
 	- caption: an optional caption to go under the thumbnail
 	- url: if you want people to click over to a URL from the gallery page, e.g. to a e-commerce page selling a product
-	- url_text: if using a url, the text (e.g. "buy now")
+	- url_text: if using a url, the text for the link (e.g. "buy now")
 	- url_icon: instead of using text for the link, use an icon (e.g. "/path/to/icons/buy.png")
+	- streamer: if your video is hosted on an RTMP streaming server you can enter the base URL of that server (e.g. "rtmp://cp99999.edgefcs.net/ondemand")
 	
 	
-KNOW ISSUES:
+== Changelog ==
 
-I'm still trying to make it work with FLV videos hosted by a streaming content provider, but I can't get past the cross-domain issue. I'm using essentially the same code (not as a WordPress plugin) on other sites without issue, so I would welcome any help.
+= 1.2 =
+* Changed the CSS properties for the dialog window, allowing you to set the background color and border style separately.
+* Added ability to add videos hosted on a streaming server.
+* Changed FLV Player to the latest (trial) version of the [JW FLV Player] (http://www.longtailvideo.com/players/jw-flv-player/ "JW FLV Player")
 
 == Screenshots ==
 
