@@ -63,6 +63,9 @@ NOTE: Use the HTML tab, not VISUAL from the WordPress Post editor.
 	
 == Changelog ==
 
+= 1.3 = 
+* Changed PHP calls to ensure that local PHP settings don't jack up the output
+
 = 1.2 =
 * Changed the CSS properties for the dialog window, allowing you to set the background color and border style separately.
 * Added ability to add videos hosted on a streaming server.
