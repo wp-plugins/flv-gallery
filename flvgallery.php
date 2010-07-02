@@ -3,7 +3,7 @@
 Plugin Name: FLV Gallery
 Plugin URI: http://northpoint.org
 Description: This plugin allows you to add multiple FLV videos to a single page, using thumbnails and a single modal player. 
-Version: 1.2	
+Version: 1.3	
 Author: Russell Todd
 Author URI: http://northpoint.org
 */
@@ -96,7 +96,6 @@ function flvgallery_jquery() {
 	echo "<!-- inside flvgallery_jquery -->\n";
 	if ($flvItemCount > 0) {	
 	?>
-	<div style="clear:both; line-height: 1px;" >&nbsp;</div>
 	<div id="flvgallery-player" style="width:426px;height:240px;display:none;"><span id="flv-gallery-player">&nbsp;</span></div>
 	<script type="text/javascript">
 	var maxRowH = 0;
@@ -139,8 +138,8 @@ function flvgallery_jquery() {
 				    left: '50%',
 				    top: '15%',
 				    'margin-left': m,
-				    'background-color': '<?= get_option('flvgallery_modal_bg_color') ?>',
-				    border: '<?= get_option('flvgallery_modal_border') ?>'
+				    'background-color': '<?php echo get_option('flvgallery_modal_bg_color'); ?>',
+				    border: '<?php echo get_option('flvgallery_modal_border') ?>'
 				    
 				  } 
 			});
@@ -223,9 +222,9 @@ function flvgallery_head() {
   cursor:pointer;
 }
 div.flvgallery-item {
-	width: <?= $tw ?>px;
-	margin: 5px <?= $h_margin ?>px;
-	padding: 5px <?= $h_pad ?>px;
+	width: <?php echo $tw; ?>px;
+	margin: 5px <?php echo $h_margin; ?>px;
+	padding: 5px <?php echo $h_pad; ?>px;
 	float: left;
 	display: inline;
 }
@@ -233,14 +232,14 @@ div.flvgallery-item h2 {
 	margin: 0px;
 }
 div.flvgallery-thumbnail {
-	width: <?= $tw ?>px;
-	max-width: <?= $tw ?>px;
-	height: <?= $th ?>px;
-	max-height: <?= $th ?>px;
+	width: <?php echo $tw; ?>px;
+	max-width: <?php echo $tw; ?>px;
+	height: <?php echo $th; ?>px;
+	max-height: <?php echo $th; ?>px;
 }
 div.flvgallery-thumbnail img {
-	max-width: <?= $tw ?>px;
-	max-height: <?= $th ?>px;
+	max-width: <?php echo $tw; ?>px;
+	max-height: <?php echo $th; ?>px;
 }
 
 span.flvgallery-caption {
@@ -349,6 +348,10 @@ function flvgallery_plugin_activate() {
 	}
 }
 
+function flvgallery_clear() {
+	echo '<div style="clear:both;line-height:1px">&nbsp;</div>';
+}
+
 add_action( 'admin_init', 'flvgallery_admin_init' );
 function flvgallery_admin_init(){
 	register_setting( 'flvgallery', 'flvgallery_container_width');
@@ -366,6 +369,7 @@ function RegisterSettingsPage() {
 add_shortcode('flvgallery', 'flvgallery_shortcode');
 add_action('wp_head','flvgallery_head');
 add_action('wp_footer','flvgallery_jquery');
+add_action('loop_end','flvgallery_clear');
 register_activation_hook( __FILE__, 'flvgallery_plugin_activate' );
 
 ?>
