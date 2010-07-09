@@ -63,6 +63,9 @@ NOTE: Use the HTML tab, not VISUAL from the WordPress Post editor.
 	
 == Changelog ==
 
+= 1.4 =
+* Changed the row height calculation to do it one row at a time so that one long description doesn't affect the entire page
+
 = 1.3 = 
 * Changed PHP calls to ensure that local PHP settings don't jack up the output
 

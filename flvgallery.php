@@ -3,7 +3,7 @@
 Plugin Name: FLV Gallery
 Plugin URI: http://northpoint.org
 Description: This plugin allows you to add multiple FLV videos to a single page, using thumbnails and a single modal player. 
-Version: 1.3	
+Version: 1.4	
 Author: Russell Todd
 Author URI: http://northpoint.org
 */
@@ -28,9 +28,11 @@ Author URI: http://northpoint.org
 
 /* Russell Todd - add shortcode for flv gallery */
 $flvItemCount = 0;
+$numColumns = 0;
 // [flvgallery video="x.flv" streamer="<optional streaming URL>" title="" caption="" thumbnail="x.jpg" url="<optional click to>" url_text="<optional link text"> url_icon="<optional link icon>" width="" height=""]
 function flvgallery_shortcode($atts) {
 	global $flvItemCount;
+	global $numColumns;
 	
 	$tw = get_option('flvgallery_thumbnail_width');
 	$th = get_option('flvgallery_thumbnail_height');
@@ -69,7 +71,7 @@ function flvgallery_shortcode($atts) {
 		<?php
 	}
 	
-	
+	$h = '';
 	$h = '<div class="flvgallery-item">';
 	$h .= '<a href="video-'.$flvItemCount.'" class="flvgallery-link">';
 	$h .= '<h2>' . $title . '</h2>';
@@ -93,12 +95,12 @@ function flvgallery_jquery() {
 // 'type' : 'rtmp',
 // 'file' : 'path to video file on streaming server'
 	global $flvItemCount;
+	global $numColumns;
 	echo "<!-- inside flvgallery_jquery -->\n";
 	if ($flvItemCount > 0) {	
 	?>
 	<div id="flvgallery-player" style="width:426px;height:240px;display:none;"><span id="flv-gallery-player">&nbsp;</span></div>
 	<script type="text/javascript">
-	var maxRowH = 0;
 	jQuery(document).ready(function() {
 		jQuery("a.flvgallery-link").click(function(evt) {
 			evt.preventDefault();
@@ -151,11 +153,21 @@ function flvgallery_jquery() {
 			swfobject.embedSWF("<?php echo WP_PLUGIN_URL; ?>/flv-gallery/player-viral.swf", "flv-gallery-player", width, height, "9", null, flashvars, { wmode: "opaque", allowfullscreen: "true" }, {});
 
 		});
-		jQuery(".flvgallery-item").each( function() {
+		var maxRowH = 0;
+		var firstIdxInRow = 0;
+		jQuery(".flvgallery-item").each( function(idx) {
 			var h = jQuery(this).height();
-			if (h > maxRowH) maxRowH = h;		
+			if (h > maxRowH) maxRowH = h; 
+			if (idx % <?php echo $numColumns ?>  == 0) {
+				firstIdxInRow = idx; // first in row
+				maxRowH = 0;// now reset max Row H
+			}
+			// now see if it's the last one in the row - numcolumns % (idx+1) should be 0
+			if ( ((idx+1) % <?php echo $numColumns ?> == 0) || (idx+1 == <?php echo $flvItemCount; ?>)) { // last one in the row OR last one overall
+				for (i=firstIdxInRow;i<=idx;i++) 
+					jQuery(".flvgallery-item:eq("+i+")").height(maxRowH);
+			}	
 		});
-		setHeights();
 	});
 	function animateOpen(dialog) {
 		dialog.overlay.fadeIn('slow', function () {
@@ -180,6 +192,7 @@ function flvgallery_jquery() {
 
 /* Add the CSS necessary to display the simple modal close button and properly layout the thumbnails */
 function flvgallery_head() {
+	global $numColumns;
 	wp_enqueue_script("simplemodal",WP_PLUGIN_URL . "/flv-gallery/jquery.simplemodal.js",array("jquery")); 
 	wp_enqueue_script("swfobject",WP_PLUGIN_URL . "/flv-gallery/swfobject.js"); 
 	wp_print_scripts();
@@ -206,6 +219,8 @@ function flvgallery_head() {
 	$remaining_h = $horiz_space - ( $h_pad * ($num_cols * 2));
 	
 	$h_margin = floor ($remaining_h / ( $num_cols * 2));
+	
+	$numColumns = $num_cols; // set the global var
 	
 ?>
 <!-- FLV Gallery Styles -->
@@ -349,7 +364,7 @@ function flvgallery_plugin_activate() {
 }
 
 function flvgallery_clear() {
-	echo '<div style="clear:both;line-height:1px">&nbsp;</div>';
+	echo '<div style="clear:both;line-height:1px;margin:10px inherit;">&nbsp;</div>';
 }
 
 add_action( 'admin_init', 'flvgallery_admin_init' );
